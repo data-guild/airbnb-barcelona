@@ -3,7 +3,7 @@ name := "airbnb-barcelona"
 version := "0.1"
 
 scalaVersion := "2.12.10"
-val sparkVersion = "2.4.5"
+val sparkVersion = "2.4.4"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion % Provided exclude("org.scalatest", "scalatest_2.11"),
