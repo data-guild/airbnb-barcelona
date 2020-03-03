@@ -18,13 +18,16 @@ object S3Writer {
       .format("csv")
       .option("inferSchema", "false")
       .option("header", "true")
-      .load("src/data/listings.csv")
+      .load("src/main/resource/raw/listings.csv")
 
-    airbnbDf.show()
     airbnbDf
       .write
+      .mode("append")
       .format("parquet")
-      .save("s3a://errors-airbnb/")
+      .save("s3a://airbnb-barcelona/raw")
+
+    spark.stop()
 
   }
+
 }
