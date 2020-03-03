@@ -2,3 +2,5 @@
 target
 project
 .pairs
+*/.DS_Store
+*/data
