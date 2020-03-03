@@ -16,6 +16,7 @@ object DataInjection {
     val sc = spark.sparkContext
     sc.hadoopConfiguration.set("fs.s3a.access.key", args(0))
     sc.hadoopConfiguration.set("fs.s3a.secret.key", args(1))
+    spark.conf.set("pathToSave", args(2))
 
     val airbnbDF = spark
       .read
@@ -36,5 +37,8 @@ object DataInjection {
 
     val airbnbColumnDroppedDF = DropColumnsTransformation.dropColumn(airbnbDF, columnsToRemove)
 
+    WholeDataInjection.dataInjection(spark)
+
+    spark.stop()
   }
 }
