@@ -18,11 +18,12 @@ object FileWriter {
     write(df, format, bucketPath+"valid")
   }
 
-  def write(df: DataFrame, format: String, folderPath: String): Unit = {
+  def write(df: DataFrame, format: String, folderPath: String, partitionCols: Seq[String] = Seq()): Unit = {
     df
       .write
       .mode("append")
       .format(format)
+      .partitionBy(partitionCols:_*)
       .save(folderPath)
   }
 }
