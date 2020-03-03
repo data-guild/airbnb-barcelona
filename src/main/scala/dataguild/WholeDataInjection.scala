@@ -11,7 +11,6 @@ object WholeDataInjection {
       .option("header", "true")
       .load("src/main/resource/raw/listings.csv")
 
-    val bucketPath = spark.conf.get("pathToSave")
-    FileWriter.write(airbnbDf, "parquet", bucketPath+"cindy")
+    FileWriter.writeToRaw(airbnbDf, "parquet", spark)
   }
 }
