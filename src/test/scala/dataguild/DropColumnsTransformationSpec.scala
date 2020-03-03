@@ -21,7 +21,7 @@ class DropColumnsTransformationSpec extends FunSpec with TestSparkSessionWrapper
       (27, 340.1)
     ).toDF("id", "price")
 
-    val actualDF = DropColumnsTransformation.dropColumn(sourceDF, List("name"))
+    val actualDF = DropColumnsTransformation.dropColumn(sourceDF, Seq("name"))
 
     expectedDF.except(actualDF).count() should be(0)
   }
