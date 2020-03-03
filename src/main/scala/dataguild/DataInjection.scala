@@ -36,9 +36,9 @@ object DataInjection {
       "country", "jurisdiction_names")
 
     val airbnbColumnDroppedDF = DropColumnsTransformation.dropColumn(airbnbDF, columnsToRemove)
+    val airbnbWithRowKeyDF = AddRowKeyTransformation.transform(airbnbColumnDroppedDF)
 
-    WholeDataInjection.dataInjection(spark)
-
+    FileWriter.writeToRaw(airbnbWithRowKeyDF, "parquet", spark)
     spark.stop()
   }
 }
