@@ -1,12 +1,10 @@
 package dataguild
 
 import org.scalatest.{FunSpec, Matchers}
-import org.apache.spark.sql.Row
-import org.apache.spark.sql.types._
 
 class DropColumnsTransformationSpec extends FunSpec with TestSparkSessionWrapper with Matchers {
 
-  import spark.implicits._;
+  import spark.implicits._
 
   it("should drop unused columns from dataframe") {
     val sourceDF = Seq(
