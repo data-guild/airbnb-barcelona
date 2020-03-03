@@ -9,6 +9,10 @@ object S3Writer {
       .master("local[*]")
       .getOrCreate()
 
+    val sc = spark.sparkContext
+    sc.hadoopConfiguration.set("fs.s3a.access.key", args(0))
+    sc.hadoopConfiguration.set("fs.s3a.secret.key", args(1))
+
     val airbnbDf = spark
       .read
       .format("csv")
