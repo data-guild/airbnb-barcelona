@@ -8,7 +8,6 @@ val sparkVersion = "2.4.4"
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion % Provided exclude("org.scalatest", "scalatest_2.11"),
   "org.apache.spark" %% "spark-sql" % sparkVersion % Provided,
-  "org.apache.hadoop" % "hadoop-aws" % "2.10.0" % Provided,
-  "org.apache.hadoop" % "hadoop-common" % "2.10.0" % Provided,
+  "org.apache.hadoop" % "hadoop-aws" % "2.6.0" % Provided,
   "org.scalatest" %% "scalatest" % "3.0.5" % Test
 )
