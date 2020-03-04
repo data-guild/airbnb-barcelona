@@ -23,7 +23,7 @@ object FileWriter {
       .write
       .mode("append")
       .format(format)
-      .partitionBy(partitionCols:_*)
+      .partitionBy("currentDate")
       .save(folderPath)
   }
 }

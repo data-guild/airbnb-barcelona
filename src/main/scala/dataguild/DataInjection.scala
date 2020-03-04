@@ -37,8 +37,9 @@ object DataInjection {
 
     val airbnbColumnDroppedDF = DropColumnsTransformation.dropColumn(airbnbDF, columnsToRemove)
     val airbnbWithRowKeyDF = AddRowKeyTransformation.transform(airbnbColumnDroppedDF)
+    val airbnbWithCurrentDateDF = AddCurrentDateTransformation.transform(airbnbWithRowKeyDF)
 
-    FileWriter.writeToRaw(airbnbWithRowKeyDF, "parquet", spark)
+    FileWriter.writeToRaw(airbnbWithCurrentDateDF, "parquet", spark)
     spark.stop()
   }
 }
