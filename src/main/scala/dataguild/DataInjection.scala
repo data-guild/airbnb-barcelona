@@ -40,6 +40,8 @@ object DataInjection {
     val airbnbWithCurrentDateDF = AddCurrentDateTransformation.transform(airbnbWithRowKeyDF)
 
     FileWriter.writeToRaw(airbnbWithCurrentDateDF, "parquet", spark)
+
+    DataTypeValidation.validate(airbnbColumnDroppedDF)
     spark.stop()
   }
 }
