@@ -1,11 +1,7 @@
 package dataguild
 
-import java.util.UUID
-
-import org.apache.spark.SparkContext
-import org.apache.spark.sql.{DataFrame, Row, SQLContext, SparkSession}
-import org.apache.spark.sql.functions.{countDistinct, udf, unix_timestamp}
-import org.apache.spark.sql.types.{BooleanType, DateType, DoubleType, FloatType, IntegerType, LongType, StructField, StructType}
+import org.apache.spark.sql.{DataFrame, Row}
+import org.apache.spark.sql.types.{DoubleType, IntegerType}
 
 import scala.util.{Failure, Success, Try}
 
@@ -15,17 +11,13 @@ object DataTypeValidation {
 
     val priceCol = DataColumn("price", "Double")
     val schema = List(priceCol)
-//    print(df.columns.length)
-//    df.printSchema()
-//    df.show()
-//    df.agg(countDistinct("price")).show()
-//    df.groupBy("price").count().show(1000)
 
 
     def typeValidation (colName: String, row: Row) = {
       val tryResult = colName match {
-        case "id" => Try(row.getString(row.fieldIndex(colName)).toInt)
-        case "price" => Failure(new Exception(s"validateDataTypes is not implemented for this datatype"))
+        case "id" => Try(row.getAs[Int](colName))
+        case "price" => Try(row.getAs[Double](colName))
+        case t@_ => Failure(new Exception(s"validateDataTypes is not implemented for this datatype $t"))
       }
 
       if (tryResult.isSuccess) {
