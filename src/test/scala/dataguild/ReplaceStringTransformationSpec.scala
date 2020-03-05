@@ -1,5 +1,6 @@
 package dataguild
 
+import org.apache.spark.sql.AnalysisException
 import org.scalatest.{FunSpec, Matchers}
 
 class ReplaceStringTransformationSpec extends FunSpec with TestSparkSessionWrapper with Matchers {
@@ -29,6 +30,20 @@ class ReplaceStringTransformationSpec extends FunSpec with TestSparkSessionWrapp
     val actArrayString = actPriceList.map(row => row.getString(0))
 
     exArrayString.mkString(",") shouldBe actArrayString.mkString(",")
+
+  }
+
+  it("should throw exception when column does not exist") {
+    val sourceDF = Seq(
+      (8, "bat", "$150.0"),
+      (64, "mouse", "123.4"),
+      (27, "horse", "$340.1")
+    ).toDF("id", "name", "price")
+
+    assertThrows[AnalysisException] {
+      ReplaceStringTransformation.
+        replaceString(sourceDF, "nonexisting_col", "$", "")
+    }
 
   }
 

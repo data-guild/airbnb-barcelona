@@ -1,6 +1,6 @@
 package dataguild
 
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object DataIngestion {
 
@@ -27,6 +27,15 @@ object DataIngestion {
       .option("multiLine", true)
       .load("src/main/resource/raw/listings.csv")
 
+    val transformedDF = transform(airbnbDF)
+
+    FileWriter.writeToRaw(transformedDF, "parquet", spark)
+
+    DataTypeValidation.validate(transformedDF)
+    spark.stop()
+  }
+
+  def transform(airbnbDF: DataFrame) = {
     val columnsToRemove = Seq("listing_url", "scrape_id", "last_scraped", "name", "summary", "space",
       "description", "neighborhood_overview", "notes", "transit", "access",
       "interaction", "house_rules", "thumbnail_url", "medium_url",
@@ -38,10 +47,6 @@ object DataIngestion {
     val withRowKeyDF = AddRowKeyTransformation.transform(columnDroppedDF)
     val withCurrentDateDF = AddCurrentDateTransformation.transform(withRowKeyDF)
     val replaceStringDF = ReplaceStringTransformation.replaceString(withCurrentDateDF, "price", "$", "")
-
-    FileWriter.writeToRaw(replaceStringDF, "parquet", spark)
-
-    DataTypeValidation.validate(columnDroppedDF)
-    spark.stop()
+    replaceStringDF
   }
 }
