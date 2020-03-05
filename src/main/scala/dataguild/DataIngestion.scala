@@ -2,7 +2,7 @@ package dataguild
 
 import org.apache.spark.sql.SparkSession
 
-object DataInjection {
+object DataIngestion {
 
 
   def main(args:Array[String]): Unit = {
@@ -34,13 +34,14 @@ object DataInjection {
       "host_about", "host_thumbnail_url", "host_picture_url", "country_code",
       "country", "jurisdiction_names")
 
-    val airbnbColumnDroppedDF = DropColumnsTransformation.dropColumn(airbnbDF, columnsToRemove)
-    val airbnbWithRowKeyDF = AddRowKeyTransformation.transform(airbnbColumnDroppedDF)
-    val airbnbWithCurrentDateDF = AddCurrentDateTransformation.transform(airbnbWithRowKeyDF)
+    val columnDroppedDF = DropColumnsTransformation.dropColumn(airbnbDF, columnsToRemove)
+    val withRowKeyDF = AddRowKeyTransformation.transform(columnDroppedDF)
+    val withCurrentDateDF = AddCurrentDateTransformation.transform(withRowKeyDF)
+    val replaceStringDF = ReplaceStringTransformation.replaceString(withCurrentDateDF, "price", "$", "")
 
-    FileWriter.writeToRaw(airbnbWithCurrentDateDF, "parquet", spark)
+    FileWriter.writeToRaw(replaceStringDF, "parquet", spark)
 
-    DataTypeValidation.validate(airbnbColumnDroppedDF)
+    DataTypeValidation.validate(columnDroppedDF)
     spark.stop()
   }
 }
