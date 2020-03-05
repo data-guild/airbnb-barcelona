@@ -1,20 +1,28 @@
 package dataguild
 
-import org.apache.spark.sql.Row
-import org.scalatest.FunSpec
+
+import org.apache.spark.sql.{Row, SparkSession}
+import org.scalatest.{FunSpec, Matchers}
 import org.apache.spark.sql.types.IntegerType
 
-class DataTypeValidationSpec extends FunSpec with TestSparkSessionWrapper{
+import scala.util.{Failure, Success, Try}
+
+class DataTypeValidationSpec extends FunSpec with TestSparkSessionWrapper with Matchers {
+
   import spark.implicits._
-
-  it("testing") {
+  it("typeValidation test returns error dataframe with no errors") {
     val sourceDF = Seq(
-      (8, "test"),
-      (64, "test2"),
-      (27, "test3")
-    ).toDF("id", "name")
+      ("aa", "8"),
+      ("bb", "hello"),
+      ("cc", "27")
+    ).toDF("rowId", "price")
 
-    sourceDF.foreach(row => println(row.getAs[IntegerType]("id")))
+
+    val (validDf, errorDf) = DataTypeValidation.validate(sourceDF)
+
+    validDf.columns should contain("rowId")
+    errorDf.columns should not contain("rowId")
+    errorDf.select("rowId").count() should be(0)
   }
 
 }
