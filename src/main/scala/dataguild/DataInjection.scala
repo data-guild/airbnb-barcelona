@@ -22,7 +22,6 @@ object DataInjection {
       .read
       .format("csv")
       .option("header", true)
-      .option("inferSchema", true)
       .option("quote", "\"")
       .option("escape", "\"")
       .option("multiLine", true)
