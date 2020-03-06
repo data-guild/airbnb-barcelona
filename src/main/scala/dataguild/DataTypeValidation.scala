@@ -11,27 +11,14 @@ import org.apache.spark.sql.functions._
 object DataTypeValidation {
 
   def validate(df: DataFrame, schema: List[DataColumn]): (DataFrame, DataFrame) = {
-
-
     val dfColumns = df.columns.map(each => col(each))
     val dfWithErrors = df.withColumn("errors", ValidateUDF.validateRow(schema)(struct(dfColumns: _*)))
-
-
     val errorsDf = dfWithErrors.select("errors")
 
-    errorsDf.show(false)
-    errorsDf.printSchema()
-
     val finalErrors = errorsDf.withColumn("errors", explode(col("errors")))
-
-    finalErrors.show(false)
-
     val errorMegDf = finalErrors.select("errors.*")
 
-    errorMegDf.show(false)
-
     val validDf = df.join(errorMegDf, df("rowId") === errorMegDf("rowId"), "leftanti")
-
     (validDf, errorMegDf)
   }
 
