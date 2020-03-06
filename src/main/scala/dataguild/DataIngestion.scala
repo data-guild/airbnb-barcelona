@@ -1,5 +1,6 @@
 package dataguild
 
+import dataguild.caseclass.Replacement
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object DataIngestion {
@@ -46,7 +47,15 @@ object DataIngestion {
     val columnDroppedDF = DropColumnsTransformation.dropColumn(airbnbDF, columnsToRemove)
     val withRowKeyDF = AddRowKeyTransformation.transform(columnDroppedDF)
     val withCurrentDateDF = AddCurrentDateTransformation.transform(withRowKeyDF)
-    val replaceStringDF = ReplaceStringTransformation.replaceString(withCurrentDateDF, "price", "$", "")
+    val replacements = List(
+      Replacement("price", "$", ""),
+      Replacement("monthly_price", "$", ""),
+      Replacement("weekly_price", "$", ""),
+      Replacement("security_deposit", "$", ""),
+      Replacement("cleaning_fee", "$", ""),
+      Replacement("extra_people", "$", ""))
+
+    val replaceStringDF = ReplaceStringTransformation.replaceStringMultiColumn(withCurrentDateDF, replacements)
     replaceStringDF
   }
 }

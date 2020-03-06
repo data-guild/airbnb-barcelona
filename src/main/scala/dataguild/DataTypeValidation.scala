@@ -31,6 +31,8 @@ object ValidateUDF {
 
       val result = dataColumn.dType match {
         case "Double" => Try(value.toDouble)
+        case "Integer" => Try(value.toInt)
+        case "Boolean" => Try(value.toBoolean)
         case "String" => Try(value)
         case "Date" => Try(LocalDate.parse(value, DateTimeFormatter.ofPattern(dataColumn.format)))
         case _ => Failure(new Exception("Some random exception"))
