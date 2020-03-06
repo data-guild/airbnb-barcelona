@@ -1,5 +1,8 @@
 package dataguild
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import org.apache.spark.sql.{DataFrame, Encoders, Row, SparkSession}
 
 import scala.util.{Failure, Success, Try}
@@ -47,6 +50,7 @@ object ValidateUDF {
       val result = dataColumn.dType match {
         case "Double" => Try(value.toDouble)
         case "String" => Try(value)
+        case "Date" => Try(LocalDate.parse(value, DateTimeFormatter.ofPattern(dataColumn.format)))
         case _ => Failure(new Exception("Some random exception"))
       }
 
