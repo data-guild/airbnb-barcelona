@@ -63,6 +63,10 @@ object DataIngestion {
       Replacement("price", ",", ""))
 
     val replaceStringDF = ReplaceStringTransformation.replaceStringMultiColumn(withCurrentDateDF, replacements)
-    replaceStringDF
+    val convertToTrueFalseDf = ConvertBinaryValueToTrueFalseTransformation.transform(replaceStringDF,
+    "host_is_superhost", "host_has_profile_pic", "host_identity_verified", "is_location_exact", "has_availability",
+      "requires_license", "instant_bookable", "is_business_travel_ready", "require_guest_profile_picture",
+      "require_guest_phone_verification")
+    convertToTrueFalseDf
   }
 }
