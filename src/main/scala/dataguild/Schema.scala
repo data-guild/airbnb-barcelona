@@ -1,6 +1,15 @@
 package dataguild
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import dataguild.caseclass.DataColumn
+import org.apache.spark.sql.expressions.UserDefinedFunction
+import org.apache.spark.sql.types.{DataType, DateType, DoubleType, StringType, StructField, StructType}
+import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.functions._
+
+import scala.util.Try
 
 object Schema {
   val schema = List(
@@ -87,4 +96,25 @@ object Schema {
     DataColumn("reviews_per_month", "Double"),
     DataColumn("currentDate", "Date", "yyyy-MM-dd", false)
   )
+
+  def enforceDataType(dataType: DataType): UserDefinedFunction = udf((columnValue: String) => {
+    dataType match {
+      case DoubleType => columnValue.toDouble
+      //      case DateType => LocalDate.parse(value, DateTimeFormatter.ofPattern(dataColumn.format))
+      case StringType => columnValue
+    }
+  })
+
+  def generateDfWithSchema(df: DataFrame, inputSchema: List[DataColumn]): DataFrame = {
+    val columnsInOrder = df.columns
+    val columnArray = columnsInOrder.map(str => col(str))
+
+    val columnName = inputSchema(0).name
+    val dtype = inputSchema(0).dType
+    val temporaryTransformedColumnName = s"${columnName}_TRANSFORMED"
+    df.withColumn(temporaryTransformedColumnName, enforceDataType(dtype)(col(columnName)))
+      .drop(columnName)
+      .withColumnRenamed(temporaryTransformedColumnName, columnName)
+      .select(columnArray: _*)
+  }
 }

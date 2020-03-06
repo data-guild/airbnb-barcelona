@@ -1,6 +1,7 @@
 package dataguild
 
 import dataguild.caseclass.DataColumn
+import org.apache.spark.sql.types.{DoubleType, StringType}
 import org.scalatest.{FunSpec, Matchers}
 
 class DataTypeValidationSpec extends FunSpec with TestSparkSessionWrapper with Matchers {
@@ -14,8 +15,8 @@ class DataTypeValidationSpec extends FunSpec with TestSparkSessionWrapper with M
       ("cc", "27")
     ).toDF("rowId", "price")
 
-    val testSchema = List(DataColumn("rowId", "String"),
-      DataColumn("price", "Double"))
+    val testSchema = List(DataColumn("rowId", StringType),
+      DataColumn("price", DoubleType))
 
     val (validDf, errorDf) = DataTypeValidation.validate(sourceDF, testSchema)
 

@@ -2,11 +2,13 @@ package dataguild
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
 import dataguild.caseclass.{DataColumn, ErrorMessage}
 import org.apache.spark.sql.{DataFrame, Row}
 
 import scala.util.{Failure, Success, Try}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.{DateType, DoubleType, StringType}
 
 object DataTypeValidation {
 

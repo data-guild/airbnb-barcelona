@@ -1,6 +1,11 @@
 package dataguild
 
+<<<<<<< HEAD
 import dataguild.caseclass.Replacement
+=======
+import dataguild.caseclass.DataColumn
+import org.apache.spark.sql.types.{DoubleType, StringType}
+>>>>>>> [#29] WIP cast data type
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object DataIngestion {
@@ -30,9 +35,14 @@ object DataIngestion {
 
     val transformedDF = transform(airbnbDF)
 
-    FileWriter.writeToRaw(transformedDF, "parquet", spark)
+    //    FileWriter.writeToRaw(transformedDF, "parquet", spark)
 
-    DataTypeValidation.validate(transformedDF, Schema.schema)
+    val (validDf, errorDf)=DataTypeValidation.validate(transformedDF, Schema.schema)
+
+    validDf.createOrReplaceGlobalTempView("validDfTable")
+    val castedDf = spark.sql("select cast(year as date) as year from validDfTable")
+
+    Schema.generateDfWithSchema(validDf, Schema.schema)
     spark.stop()
   }
 
@@ -53,7 +63,8 @@ object DataIngestion {
       Replacement("weekly_price", "$", ""),
       Replacement("security_deposit", "$", ""),
       Replacement("cleaning_fee", "$", ""),
-      Replacement("extra_people", "$", ""))
+      Replacement("extra_people", "$", ""),
+      Replacement("price", ",", ""))
 
     val replaceStringDF = ReplaceStringTransformation.replaceStringMultiColumn(withCurrentDateDF, replacements)
     replaceStringDF
