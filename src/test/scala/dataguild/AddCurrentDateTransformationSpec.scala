@@ -15,7 +15,7 @@ class AddCurrentDateTransformationSpec extends FunSpec with TestSparkSessionWrap
       27
     ).toDF("id")
 
-    val format = new SimpleDateFormat("yyyyMMdd")
+    val format = new SimpleDateFormat(AddCurrentDateTransformation.dateFormat)
     val currentDate = format.format(Calendar.getInstance().getTime())
 
     val expectedDF = Seq(
