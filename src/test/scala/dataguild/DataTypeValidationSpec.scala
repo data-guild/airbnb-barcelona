@@ -15,8 +15,8 @@ class DataTypeValidationSpec extends FunSpec with TestSparkSessionWrapper with M
       ("cc", "27")
     ).toDF("rowId", "price")
 
-    val testSchema = List(DataColumn("rowId", StringType),
-      DataColumn("price", DoubleType))
+    val testSchema = List(DataColumn("rowId",  "String"),
+      DataColumn("price", "Double"))
 
     val (validDf, errorDf) = DataTypeValidation.validate(sourceDF, testSchema)
 

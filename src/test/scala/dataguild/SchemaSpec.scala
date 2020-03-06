@@ -15,11 +15,10 @@ class SchemaSpec extends FunSpec with Matchers with TestSparkSessionWrapper{
       ("cc", 27.0)
     ).toDF("rowId", "price")
 
-    val testSchema = List(DataColumn("rowId", StringType),
-      DataColumn("price", DoubleType))
+    val testSchema = List(DataColumn("rowId", "String"),
+      DataColumn("price", "Double"))
 
     val finalDf = Schema.generateDfWithSchema(validDf, testSchema)
     finalDf.printSchema()
-    finalDf.show()
   }
 }

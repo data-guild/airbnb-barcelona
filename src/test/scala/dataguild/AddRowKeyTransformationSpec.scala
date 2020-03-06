@@ -17,5 +17,6 @@ class AddRowKeyTransformationSpec extends FunSpec with TestSparkSessionWrapper w
 
     updatedDF.columns should contain ("rowId")
     updatedDF.columns(0) should be ("rowId")
+    updatedDF.select("rowId") should not be empty
   }
 }

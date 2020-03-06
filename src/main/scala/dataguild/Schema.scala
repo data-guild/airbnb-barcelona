@@ -97,24 +97,28 @@ object Schema {
     DataColumn("currentDate", "Date", "yyyy-MM-dd", false)
   )
 
-  def enforceDataType(dataType: DataType): UserDefinedFunction = udf((columnValue: String) => {
+  def enforceDataType(dataType: String): UserDefinedFunction = udf((columnValue: String) => {
     dataType match {
-      case DoubleType => columnValue.toDouble
+      case "Double" => columnValue.toDouble
       //      case DateType => LocalDate.parse(value, DateTimeFormatter.ofPattern(dataColumn.format))
-      case StringType => columnValue
+      case "String" => columnValue
     }
   })
 
   def generateDfWithSchema(df: DataFrame, inputSchema: List[DataColumn]): DataFrame = {
-    val columnsInOrder = df.columns
-    val columnArray = columnsInOrder.map(str => col(str))
 
-    val columnName = inputSchema(0).name
-    val dtype = inputSchema(0).dType
-    val temporaryTransformedColumnName = s"${columnName}_TRANSFORMED"
-    df.withColumn(temporaryTransformedColumnName, enforceDataType(dtype)(col(columnName)))
-      .drop(columnName)
-      .withColumnRenamed(temporaryTransformedColumnName, columnName)
-      .select(columnArray: _*)
+    val origColOrder = inputSchema.map(_.name)
+
+    val unorderedDf = inputSchema.foldLeft(df) {
+      (df,dataCol) =>  {
+        dataCol.dType match {
+          case "Double" =>  df.withColumn(dataCol.name, df(dataCol.name).cast(DoubleType))
+          case "String" => df
+        }
+      }
+    }
+    val returnDf = unorderedDf.select(origColOrder.map(col): _*)
+
+    returnDf
   }
 }

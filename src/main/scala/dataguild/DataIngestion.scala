@@ -1,11 +1,7 @@
 package dataguild
 
-<<<<<<< HEAD
+
 import dataguild.caseclass.Replacement
-=======
-import dataguild.caseclass.DataColumn
-import org.apache.spark.sql.types.{DoubleType, StringType}
->>>>>>> [#29] WIP cast data type
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
 object DataIngestion {
