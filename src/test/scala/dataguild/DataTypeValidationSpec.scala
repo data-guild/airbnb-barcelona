@@ -1,11 +1,5 @@
 package dataguild
-
-
-import org.apache.spark.sql.{Row, SparkSession}
 import org.scalatest.{FunSpec, Matchers}
-import org.apache.spark.sql.types.IntegerType
-
-import scala.util.{Failure, Success, Try}
 
 class DataTypeValidationSpec extends FunSpec with TestSparkSessionWrapper with Matchers {
 
@@ -21,8 +15,9 @@ class DataTypeValidationSpec extends FunSpec with TestSparkSessionWrapper with M
     val (validDf, errorDf) = DataTypeValidation.validate(sourceDF)
 
     validDf.columns should contain("rowId")
-    errorDf.columns should not contain("rowId")
-    errorDf.select("rowId").count() should be(0)
+    errorDf.columns should contain("rowId")
+    validDf.select("rowId").count() should be(2)
+    errorDf.select("rowId").count() should be(1)
   }
 
 }
