@@ -102,7 +102,24 @@ class ReplaceStringTransformationSpec extends FunSpec with TestSparkSessionWrapp
       ReplaceStringTransformation.
         replaceString(sourceDF, replacement)
     }
+  }
 
+  it("should treat source string as regex when isRegex of Replacement is true") {
+    val sourceDF = Seq(
+      "ten", "t", "sit"
+    ).toDF("some_col")
+
+    val expectedDf = Seq(
+      "ten", "true", "sit"
+    ).toDF("some_col")
+
+    val replacement = Replacement("some_col", "^t$", "true", isRegex = true)
+    val actualDF = ReplaceStringTransformation.replaceString(sourceDF, replacement)
+
+    val expectedPrice = collectColAsString(expectedDf, "some_col")
+    val actualPrice = collectColAsString(actualDF, "some_col")
+
+    expectedPrice shouldBe actualPrice
   }
 
   def collectColAsString(df: DataFrame, columnName: String): String = {

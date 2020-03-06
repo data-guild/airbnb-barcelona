@@ -14,10 +14,11 @@ object ReplaceStringTransformation {
     val columnArray = columnsInOrder.map(str => col(str))
 
     val temporaryTransformedColumnName = s"${replacement.columnName}_TRANSFORMED"
+
     df.withColumn(temporaryTransformedColumnName,
       when(
         col(replacement.columnName).isNotNull,
-        UDFs.replaceCharUdf(replacement.source, replacement.target)(col(replacement.columnName))
+        UDFs.replaceCharUdf(replacement.source, replacement.target, replacement.isRegex)(col(replacement.columnName))
       ).otherwise(lit(null)))
       .drop(replacement.columnName)
       .withColumnRenamed(temporaryTransformedColumnName, replacement.columnName)
@@ -33,9 +34,13 @@ object ReplaceStringTransformation {
 
 object UDFs {
 
-  def replaceCharUdf(source: String, target: String): UserDefinedFunction =
+  def replaceCharUdf(source: String, target: String, isRegex: Boolean): UserDefinedFunction =
     udf((columnValue: String) => {
-      columnValue.replace(source, target)
+      if (isRegex) {
+        columnValue.replaceAll(source, target)
+      } else {
+        columnValue.replace(source, target)
+      }
     })
 
 }
