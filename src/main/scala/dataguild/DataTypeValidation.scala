@@ -2,19 +2,16 @@ package dataguild
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
-import org.apache.spark.sql.{DataFrame, Encoders, Row, SparkSession}
+import dataguild.caseclass.{DataColumn, ErrorMessage}
+import org.apache.spark.sql.{DataFrame, Row}
 
 import scala.util.{Failure, Success, Try}
 import org.apache.spark.sql.functions._
 
 object DataTypeValidation {
 
-  def validate(df: DataFrame): (DataFrame, DataFrame) = {
+  def validate(df: DataFrame, schema: List[DataColumn]): (DataFrame, DataFrame) = {
 
-    val schema = List(
-      DataColumn("rowId", "String"),
-      DataColumn("price", "Double"))
 
     val dfColumns = df.columns.map(each => col(each))
     val dfWithErrors = df.withColumn("errors", ValidateUDF.validateRow(schema)(struct(dfColumns: _*)))
@@ -39,8 +36,6 @@ object DataTypeValidation {
   }
 
 }
-
-case class ErrorMessage(rowId: String, columnName: String, columnValue: String, errorMessage: String)
 
 object ValidateUDF {
   def validateRow(schema: List[DataColumn]) = udf((row: Row) => {

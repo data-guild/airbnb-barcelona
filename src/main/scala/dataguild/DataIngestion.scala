@@ -5,7 +5,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 object DataIngestion {
 
 
-  def main(args:Array[String]): Unit = {
+  def main(args: Array[String]): Unit = {
 
     val spark = SparkSession
       .builder()
@@ -31,7 +31,7 @@ object DataIngestion {
 
     FileWriter.writeToRaw(transformedDF, "parquet", spark)
 
-    DataTypeValidation.validate(transformedDF)
+    DataTypeValidation.validate(transformedDF, Schema.schema)
     spark.stop()
   }
 
