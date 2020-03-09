@@ -1,8 +1,8 @@
 package dataguild
 
+import dataguild.caseclass.Replacement
 import org.apache.spark.sql.{AnalysisException, DataFrame}
 import org.scalatest.{FunSpec, Matchers}
-import dataguild.caseclass.Replacement
 
 
 class ReplaceStringTransformationSpec extends FunSpec with TestSparkSessionWrapper with Matchers {

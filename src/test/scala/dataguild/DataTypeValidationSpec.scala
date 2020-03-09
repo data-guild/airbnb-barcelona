@@ -1,7 +1,6 @@
 package dataguild
 
 import dataguild.caseclass.DataColumn
-import org.apache.spark.sql.types.{DoubleType, StringType}
 import org.scalatest.{FunSpec, Matchers}
 
 class DataTypeValidationSpec extends FunSpec with TestSparkSessionWrapper with Matchers {
@@ -10,13 +9,15 @@ class DataTypeValidationSpec extends FunSpec with TestSparkSessionWrapper with M
 
   it("typeValidation test returns error dataframe with no errors") {
     val sourceDF = Seq(
-      ("aa", "8"),
-      ("bb", "hello"),
-      ("cc", "27")
-    ).toDF("rowId", "price")
+      ("aa", "8", "2020-01-22"),
+      ("bb", "hello", "2020-02-22"),
+      ("cc", "27", "2020-01-12")
+    ).toDF("rowId", "price", "currentDate")
 
-    val testSchema = List(DataColumn("rowId",  "String"),
-      DataColumn("price", "Double"))
+    val testSchema = List(DataColumn("rowId", "String"),
+      DataColumn("price", "Double"),
+      DataColumn("currentDate", "Date", "yyyy-MM-dd", false)
+    )
 
     val (validDf, errorDf) = DataTypeValidation.validate(sourceDF, testSchema)
 

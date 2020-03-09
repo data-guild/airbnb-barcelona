@@ -1,15 +1,9 @@
 package dataguild
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 import dataguild.caseclass.DataColumn
-import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.types.{BooleanType, DataType, DateType, DoubleType, IntegerType, StringType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
-
-import scala.util.Try
+import org.apache.spark.sql.types.{BooleanType, DateType, DoubleType, IntegerType}
 
 object Schema {
   val schema = List(
@@ -96,13 +90,6 @@ object Schema {
     DataColumn("reviews_per_month", "Double"),
     DataColumn("currentDate", "Date", "yyyy-MM-dd", false)
   )
-
-  def enforceDataType(dataType: String): UserDefinedFunction = udf((columnValue: String) => {
-    dataType match {
-      case "Double" => columnValue.toDouble
-      case "String" => columnValue
-    }
-  })
 
   def generateDfWithSchema(df: DataFrame, inputSchema: List[DataColumn]): DataFrame = {
 

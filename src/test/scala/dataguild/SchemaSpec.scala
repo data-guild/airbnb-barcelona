@@ -1,8 +1,7 @@
 package dataguild
 
 import dataguild.caseclass.DataColumn
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.{BooleanType, DateType, DoubleType, IntegerType, StringType}
+import org.apache.spark.sql.types.{BooleanType, DateType, DoubleType, StringType}
 import org.scalatest.{FunSpec, Matchers}
 
 class SchemaSpec extends FunSpec with Matchers with TestSparkSessionWrapper{

@@ -4,11 +4,10 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 import dataguild.caseclass.{DataColumn, ErrorMessage}
+import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, Row}
 
 import scala.util.{Failure, Success, Try}
-import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.{DateType, DoubleType, StringType}
 
 object DataTypeValidation {
 
@@ -19,7 +18,6 @@ object DataTypeValidation {
 
     val finalErrors = errorsDf.withColumn("errors", explode(col("errors")))
     val errorMegDf = finalErrors.select("errors.*")
-
     val validDf = df.join(errorMegDf, df("rowId") === errorMegDf("rowId"), "leftanti")
     (validDf, errorMegDf)
   }
@@ -42,7 +40,7 @@ object ValidateUDF {
 
       result match {
         case Success(_) => List.empty
-        case Failure(_) => List(ErrorMessage(row.getAs("rowId"), dataColumn.name, value, "cannot do whatever"))
+        case Failure(_) => List(ErrorMessage(row.getAs("rowId"), dataColumn.name, value, "cannot do whatever", row.getAs("currentDate")))
       }
     })
   })

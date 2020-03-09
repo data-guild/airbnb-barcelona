@@ -33,12 +33,14 @@ object DataIngestion {
 
     //    FileWriter.writeToRaw(transformedDF, "parquet", spark)
 
-    val (validDf, errorDf)=DataTypeValidation.validate(transformedDF, Schema.schema)
+    val (validDf, errorDf) = DataTypeValidation.validate(transformedDF, Schema.schema)
 
-    validDf.createOrReplaceGlobalTempView("validDfTable")
-    val castedDf = spark.sql("select cast(year as date) as year from validDfTable")
+    //    FileWriter.writeToError(errorDf, "parquet", spark)
 
-    Schema.generateDfWithSchema(validDf, Schema.schema)
+    val finalValidDf = Schema.generateDfWithSchema(validDf, Schema.schema)
+    //    FileWriter.writeToValid(finalValidDf, "parquet", spark)
+
+
     spark.stop()
   }
 
@@ -64,7 +66,7 @@ object DataIngestion {
 
     val replaceStringDF = ReplaceStringTransformation.replaceStringMultiColumn(withCurrentDateDF, replacements)
     val convertToTrueFalseDf = ConvertBinaryValueToTrueFalseTransformation.transform(replaceStringDF,
-    "host_is_superhost", "host_has_profile_pic", "host_identity_verified", "is_location_exact", "has_availability",
+      "host_is_superhost", "host_has_profile_pic", "host_identity_verified", "is_location_exact", "has_availability",
       "requires_license", "instant_bookable", "is_business_travel_ready", "require_guest_profile_picture",
       "require_guest_phone_verification")
     convertToTrueFalseDf

@@ -1,7 +1,8 @@
 package dataguild
 
-import collection.mutable.Stack
 import org.scalatest._
+
+import scala.collection.mutable.Stack
 
 class SampleTest extends FlatSpec with Matchers {
 
