@@ -30,16 +30,13 @@ object DataIngestion {
       .load("src/main/resource/raw/listings.csv")
 
     val transformedDF = transform(airbnbDF)
-
-    //    FileWriter.writeToRaw(transformedDF, "parquet", spark)
+    FileWriter.writeToRaw(transformedDF, "parquet", spark)
 
     val (validDf, errorDf) = DataTypeValidation.validate(transformedDF, Schema.schema)
-
-    //    FileWriter.writeToError(errorDf, "parquet", spark)
+    FileWriter.writeToError(errorDf, "parquet", spark)
 
     val finalValidDf = Schema.generateDfWithSchema(validDf, Schema.schema)
-    //    FileWriter.writeToValid(finalValidDf, "parquet", spark)
-
+    FileWriter.writeToValid(finalValidDf, "parquet", spark)
 
     spark.stop()
   }
