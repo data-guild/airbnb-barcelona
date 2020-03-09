@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 
 import dataguild.caseclass.DataColumn
 import org.apache.spark.sql.expressions.UserDefinedFunction
-import org.apache.spark.sql.types.{DataType, DateType, DoubleType, StringType, StructField, StructType}
+import org.apache.spark.sql.types.{BooleanType, DataType, DateType, DoubleType, IntegerType, StringType, StructField, StructType}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
 
@@ -113,6 +113,9 @@ object Schema {
       (df,dataCol) =>  {
         dataCol.dType match {
           case "Double" =>  df.withColumn(dataCol.name, df(dataCol.name).cast(DoubleType))
+          case "Integer" => df.withColumn(dataCol.name, df(dataCol.name).cast(IntegerType))
+          case "Boolean" =>df.withColumn(dataCol.name, df(dataCol.name).cast(BooleanType))
+          case "Date" => df
           case "String" => df
         }
       }
