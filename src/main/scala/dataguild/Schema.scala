@@ -100,7 +100,6 @@ object Schema {
   def enforceDataType(dataType: String): UserDefinedFunction = udf((columnValue: String) => {
     dataType match {
       case "Double" => columnValue.toDouble
-      //      case DateType => LocalDate.parse(value, DateTimeFormatter.ofPattern(dataColumn.format))
       case "String" => columnValue
     }
   })
@@ -115,7 +114,7 @@ object Schema {
           case "Double" =>  df.withColumn(dataCol.name, df(dataCol.name).cast(DoubleType))
           case "Integer" => df.withColumn(dataCol.name, df(dataCol.name).cast(IntegerType))
           case "Boolean" =>df.withColumn(dataCol.name, df(dataCol.name).cast(BooleanType))
-          case "Date" => df
+          case "Date" => df.withColumn(dataCol.name, df(dataCol.name).cast(DateType))
           case "String" => df
         }
       }
