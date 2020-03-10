@@ -24,7 +24,7 @@ object FileWriter {
   def write(df: DataFrame, format: String, folderPath: String, partitionCols: Seq[String] = Seq()): Unit = {
     df
       .write
-      .mode("overwrite")
+      .mode("append")
       .format(format)
       .partitionBy(partitionCols: _*)
       .save(folderPath)
