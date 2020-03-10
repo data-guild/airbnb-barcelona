@@ -47,15 +47,14 @@ object DataIngestion {
       "interaction", "house_rules", "thumbnail_url", "medium_url",
       "picture_url", "xl_picture_url", "host_id", "host_url", "host_name",
       "host_about", "host_thumbnail_url", "host_picture_url", "country_code",
-      "country", "jurisdiction_names")
+      "country", "jurisdiction_names", "host_acceptance_rate", "square_feet",
+      "weekly_price", "monthly_price", "experiences_offered", "requires_license", "is_business_travel_ready")
 
     val columnDroppedDF = DropColumnsTransformation.dropColumn(airbnbDF, columnsToRemove)
     val withRowKeyDF = AddRowKeyTransformation.transform(columnDroppedDF)
     val withCurrentDateDF = AddCurrentDateTransformation.transform(withRowKeyDF)
     val replacements = List(
       Replacement("price", "$", ""),
-      Replacement("monthly_price", "$", ""),
-      Replacement("weekly_price", "$", ""),
       Replacement("security_deposit", "$", ""),
       Replacement("cleaning_fee", "$", ""),
       Replacement("extra_people", "$", ""),
@@ -64,8 +63,8 @@ object DataIngestion {
 
     val replaceStringDF = ReplaceStringTransformation.replaceStringMultiColumn(withCurrentDateDF, replacements)
     val convertToTrueFalseDf = ConvertBinaryValueToTrueFalseTransformation.transform(replaceStringDF,
-      "host_is_superhost", "host_has_profile_pic", "host_identity_verified", "is_location_exact", "has_availability",
-      "requires_license", "instant_bookable", "is_business_travel_ready", "require_guest_profile_picture",
+      "host_is_superhost", "host_has_profile_pic", "host_identity_verified", "is_location_exact",
+      "has_availability", "instant_bookable", "require_guest_profile_picture",
       "require_guest_phone_verification")
 
     val convertToDecimalsDf =  ConvertToDecimalTransformation.transform(convertToTrueFalseDf, colNames="host_response_rate")
