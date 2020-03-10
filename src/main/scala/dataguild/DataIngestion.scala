@@ -48,7 +48,9 @@ object DataIngestion {
       "picture_url", "xl_picture_url", "host_id", "host_url", "host_name",
       "host_about", "host_thumbnail_url", "host_picture_url", "country_code",
       "country", "jurisdiction_names", "host_acceptance_rate", "square_feet",
-      "weekly_price", "monthly_price", "experiences_offered", "requires_license", "is_business_travel_ready")
+      "weekly_price", "monthly_price", "experiences_offered", "requires_license", "is_business_travel_ready",
+      "calendar_last_scraped", "smart_location", "minimum_minimum_nights","city", "state",
+      "maximum_minimum_nights", "minimum_maximum_nights", "maximum_maximum_nights")
 
     val columnDroppedDF = DropColumnsTransformation.dropColumn(airbnbDF, columnsToRemove)
     val withRowKeyDF = AddRowKeyTransformation.transform(columnDroppedDF)
@@ -67,7 +69,7 @@ object DataIngestion {
       "has_availability", "instant_bookable", "require_guest_profile_picture",
       "require_guest_phone_verification")
 
-    val convertToDecimalsDf =  ConvertToDecimalTransformation.transform(convertToTrueFalseDf, colNames="host_response_rate")
+    val convertToDecimalsDf = ConvertToDecimalTransformation.transform(convertToTrueFalseDf, colNames = "host_response_rate")
 
     convertToDecimalsDf
   }
