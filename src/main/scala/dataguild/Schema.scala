@@ -9,6 +9,7 @@ object Schema {
   val schema = List(
     DataColumn("rowId", "String"),
     DataColumn("id", "String"),
+    DataColumn("host_id", "String"),
     DataColumn("host_since", "Date", "yyyy-MM-dd"),
     DataColumn("host_location", "String"),
     DataColumn("host_response_time", "String"),
