@@ -68,8 +68,7 @@ class ReplaceStringTransformationSpec extends FunSpec with TestSparkSessionWrapp
     ).toDF("id", "name", "price")
 
     val expectedDf = Seq(
-      (8, "bat", null),
-    ).toDF("id", "name", "price")
+      (8, "bat", null)).toDF("id", "name", "price")
 
     val replacements = Replacement("price", "$", "")
 

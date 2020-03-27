@@ -18,8 +18,7 @@ class SchemaSpec extends FunSpec with Matchers with TestSparkSessionWrapper{
       DataColumn("rowId", "String"),
       DataColumn("price", "Double"),
       DataColumn("date", "Date", "yyyy-MM-dd"),
-      DataColumn("verified", "Boolean"),
-    )
+      DataColumn("verified", "Boolean"))
 
     val finalDf = Schema.generateDfWithSchema(validDf, testSchema)
 
