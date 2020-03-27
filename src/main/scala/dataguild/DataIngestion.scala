@@ -15,10 +15,13 @@ object DataIngestion {
       .master("local[*]")
       .getOrCreate()
 
+    spark.conf.set("pathToSave", args(0))
+
     val sc = spark.sparkContext
-    sc.hadoopConfiguration.set("fs.s3a.access.key", args(0))
-    sc.hadoopConfiguration.set("fs.s3a.secret.key", args(1))
-    spark.conf.set("pathToSave", args(2))
+    if(args.length > 1) sc.hadoopConfiguration.set("fs.s3a.access.key", args(1))
+    if(args.length > 2) sc.hadoopConfiguration.set("fs.s3a.secret.key", args(2))
+
+    val sourceFile = "dataguild/raw/listings.csv"
 
     val airbnbDF = spark
       .read
@@ -27,7 +30,7 @@ object DataIngestion {
       .option("quote", "\"")
       .option("escape", "\"")
       .option("multiLine", true)
-      .load("src/main/resource/raw/listings.csv")
+      .load(sourceFile)
 
     val transformedDF = transform(airbnbDF)
     FileWriter.writeToRaw(transformedDF, "parquet", spark)
@@ -45,7 +48,7 @@ object DataIngestion {
     val columnsToRemove = Seq("listing_url", "scrape_id", "last_scraped", "name", "summary", "space",
       "description", "neighborhood_overview", "notes", "transit", "access",
       "interaction", "house_rules", "thumbnail_url", "medium_url",
-      "picture_url", "xl_picture_url", "host_id", "host_url", "host_name",
+      "picture_url", "xl_picture_url", "host_url", "host_name",
       "host_about", "host_thumbnail_url", "host_picture_url", "country_code",
       "country", "jurisdiction_names", "host_acceptance_rate", "square_feet",
       "weekly_price", "monthly_price", "experiences_offered", "requires_license", "is_business_travel_ready",
